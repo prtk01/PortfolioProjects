@@ -1,16 +1,24 @@
-use asus 
+
 
 -- Loading data into the table
+
 load data infile "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/All_Order_Report.txt"
 into table project
 ignore 1 lines;
 
+
+
 -- Findind duplicate rows
+
+
 select amazon_order_id,product_name,sku,quantity from project
 group by amazon_order_id, product_name,sku,quantity
 Having count(amazon_order_id)>1
 
+
 -- deleting the duplicate rows using an intermediate table
+
+
  create table project_temp
  like project;
  SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
@@ -25,7 +33,11 @@ rename to project;
 select* from project
 delete from project where amazon_order_id like ""
 
+
+
+
 -- Removing unwanted and null columns(having sum of column==0)
+
 
 Select sum(item_tax), sum(shipping_tax), sum(gift_wrap_price), sum(gift_wrap_tax), 
 sum(price_designation), sum(vat_exclusive_giftwrap_price) from project ;
@@ -44,10 +56,16 @@ Alter table project
   
   
   -- Removing brand name for any issues
+  
+  
   select product_name, substring_index(product_name," ",0-(length(product_name)-length(replace(product_name," ","")))) 
   from project
   
+  
+  
   -- another menthod, replacing brand name with null value
+  
+  
   select replace(product_name,"Brand","") from project
   
 SET SQL_SAFE_UPDATES = 0;
@@ -57,9 +75,15 @@ set product_name = substring_index(product_name," ",0-(length(product_name)-leng
 select * from project 
 
 
+
+
 -- Updating data types
+
+
 alter table project 
 modify column purchase_date date;
 
 alter table project
 modify column quantity int;
+
+
