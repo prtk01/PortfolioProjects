@@ -87,3 +87,11 @@ alter table project
 modify column quantity int;
 
 
+-- Filling empty strings with zero value for smooth calculaations
+
+
+update orders
+set item_price= coalesce(nullif(item_price,""), 0.0)
+
+update orders
+set vat_exclusive_item_price= coalesce(nullif(vat_exclusive_item_price,""), 0.0)
