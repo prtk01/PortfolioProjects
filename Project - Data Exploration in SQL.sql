@@ -1,3 +1,9 @@
+/*
+Amazon Orders Data and Settlement Report Exploration 
+Skills used: Joins, CTE's, Windows Functions, Aggregate Functions, Case, Converting Data Types
+*/
+
+
 select* from orders;
 
 -- Total orders, Total orders value
@@ -153,9 +159,9 @@ select * from settle
 -- joining the 3 tables to calculate net sales and profit for a order and different products, sku and category
 
 
-Select orders.amazon_order_id, orders.sku,orders.quantity,orders.item_price,
+Select orders.amazon_order_id, orders.sku,orders.quantity,Round(orders.item_price,2),
  orders.item_promotion_discount, orders.shipping_price,
-settle.total_price, settle.total_discount, settle.net_amt,
+settle.total_price, settle.total_discount, Round(settle.net_amt,2),
 mapper.category, mapper.mrp,mapper.cogs, mapper.tax_rate,
 Case 
 	when item_price > net_amt then "Loss"
@@ -164,3 +170,7 @@ Case
 from orders
 join settle on orders.amazon_order_id=settle.order_id
 join mapper on orders.sku=mapper.sku 
+
+
+
+
